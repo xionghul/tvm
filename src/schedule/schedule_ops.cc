@@ -361,7 +361,7 @@ Stmt ScheduleOps(
     CHECK(!g->op.defined());
     CHECK_EQ(g->leaf_iter_vars.size(), 0U);
   }
-  // reverse the post DFS order.
+  // * reverse the post DFS order.
   for (size_t i = sch->stages.size(); i != 0; --i) {
     Stage s = sch->stages[i - 1];
     CHECK_NE(s->attach_type, kInline)

@@ -122,6 +122,7 @@ inline bool Pool2DCorrectLayout(const NodeAttrs& attrs,
   return true;
 }
 
+//max_pool2d infoshape.
 NNVM_REGISTER_OP(max_pool2d)
 .describe(R"code(Max pooling operation for one dimensional data.
 
@@ -236,7 +237,7 @@ NNVM_REGISTER_OP(avg_pool2d)
 .set_attr_parser(ParamParser<AvgPool2DParam>)
 .set_attr<FGetAttrDict>("FGetAttrDict", ParamGetAttrDict<AvgPool2DParam>)
 .set_attr<FInferShape>("FInferShape", Pool2DInferShape<AvgPool2DParam>)
-.set_attr<FInferType>("FInferType", ElemwiseType<1, 1>)
+.set_attr<FInferType>("FInferType", ElemwiseType<1, 1>) /* ElemwiseType */
 .set_attr<FCorrectLayout>("FCorrectLayout", Pool2DCorrectLayout<AvgPool2DParam>)
 .set_attr<FTVMCompute>("FTVMCompute", [](const NodeAttrs& attrs,
                                          const Array<Tensor>& inputs,

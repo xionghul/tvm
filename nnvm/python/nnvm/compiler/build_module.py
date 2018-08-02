@@ -249,7 +249,7 @@ def build(graph, target=None, shape=None, dtype="float32",
     graph = graph if isinstance(graph, _graph.Graph) else _graph.create(graph)
     shape, dtype = _update_shape_dtype(shape, dtype, params)
 
-    # correct layout if necessary
+    #1. correct layout if necessary
     layout = layout if layout else {}
     graph = graph_attr.set_layout_inputs(graph, layout)
     graph = graph.apply("CorrectLayout")
@@ -257,28 +257,28 @@ def build(graph, target=None, shape=None, dtype="float32",
     layouts = graph.json_attr("layout")
     layout = {x : layouts[index.entry_id(x)] for x in index.input_names}
 
-    # Initial pass do shape type inference
+    #2. Initial pass do shape type inference
     ishape, _ = graph_util.infer_shape(graph, **shape)
     shape.update(zip(graph.index.input_names, ishape))
     if not isinstance(dtype, str):
         idtype, _ = graph_util.infer_dtype(graph, **dtype)
         dtype.update(zip(graph.index.input_names, idtype))
-    # Initialize all variables specified in _all_var_init
+    #3. Initialize all variables specified in _all_var_init
     init_var = {}
     if _all_var_init:
         init_var = initialize_variables(shape, dtype)
-    # Apply optimization
+    #4. Apply optimization: SimplifyInference & FoldScaleAxis
     with target:
         graph = optimize(graph, shape, dtype, layout)
 
-    # Clear extra params without nodes.
+    #5. Clear extra params without nodes.
     _remove_noref_params(params, graph)
 
-    # Precompute prune
+    #6. Precompute prune
     if params and cfg.pass_enabled("PrecomputePrune"):
         graph, params = precompute_prune(graph, params)
         shape, dtype = _update_shape_dtype(shape, dtype, params)
-    # Operator Fusion and generation
+    #7. Operator Fusion and generation: GraphFusePartition & GraphFuseCompile
     graph = graph_attr.set_shape_inputs(graph, shape)
     graph = graph.apply("InferShape")
     graph = graph_attr.set_dtype_inputs(graph, dtype)
@@ -291,9 +291,9 @@ def build(graph, target=None, shape=None, dtype="float32",
         graph._set_json_attr("opt_level", 0, "int")
     graph = graph.apply("InferShape").apply("InferType")
     with target:
-        graph = graph.apply("GraphFusePartition").apply("GraphFuseCompile")
+        graph = graph.apply("GraphFusePartition").apply("GraphFuseCompile") # call GraphLower -> nnvm.compiler.lower
     libmod = graph_attr._move_out_module(graph, "module")
-    # Write variable initial values into params
+    #8. Write variable initial values into params
     if init_var:
         if params is None:
             params = {}

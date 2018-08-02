@@ -59,6 +59,7 @@ inline bool ElemwiseAttr(const nnvm::NodeAttrs& attrs,
   return true;
 }
 
+/* ElemwiseType */
 template<int n_in, int n_out>
 inline bool ElemwiseShape(const NodeAttrs& attrs,
                           std::vector<TShape> *in_attrs,

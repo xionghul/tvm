@@ -202,6 +202,7 @@ Graph InferAttr(Graph &&ret,
   return ret;
 }
 
+//2. info shape.
 NNVM_REGISTER_PASS(InferShape)
 .describe("Infer the shape of each node entries.")
 .set_body([](Graph ret) {

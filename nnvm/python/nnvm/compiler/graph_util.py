@@ -8,6 +8,7 @@ from . import graph_attr
 from ..graph import create
 from ..symbol import Group, ones_like
 
+# infer_shape函数功能为利用提供的输入节点的shape信息计算计算图涉及节点的推理shape
 def infer_shape(graph, **shape):
     """Infer the shape given the shape of inputs.
 

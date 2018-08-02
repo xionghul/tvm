@@ -24,6 +24,7 @@ TVM_REGISTER_API("schedule.AutoInlineInjective")
     AutoInlineInjective(args[0]);
   });
 
+// schedule.ScheduleOps
 TVM_REGISTER_API("schedule.ScheduleOps")
 .set_body([](TVMArgs args, TVMRetValue* ret) {
   if (args.size() == 2)

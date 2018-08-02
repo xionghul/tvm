@@ -338,7 +338,7 @@ def lower(sch,
         # normalize schedule first
         sch = sch.normalize()
         bounds = schedule.InferBound(sch)
-        stmt = schedule.ScheduleOps(sch, bounds)
+        stmt = schedule.ScheduleOps(sch, bounds) # schedule.ScheduleOps
         stmt = ir_pass.InjectPrefetch(stmt)
     else:
         #So far there is no op for hybrid script, so a plain ir body is given
