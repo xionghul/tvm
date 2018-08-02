@@ -113,6 +113,12 @@ inline bool Pool2DCorrectLayout(const NodeAttrs& attrs,
   NNVM_ASSIGN_LAYOUT(*ilayouts, 0, input);
   NNVM_ASSIGN_LAYOUT(*olayouts, 0, input);
 
+/*
+ * Pool2DCorrectLayout主要功能为：
+ * 1. 如果input layout没有指定，则设置成默认layout
+ * 2. 如果input layout已经指定，但是和默认layout不一致则校正成默认layout
+ */
+
   return true;
 }
 

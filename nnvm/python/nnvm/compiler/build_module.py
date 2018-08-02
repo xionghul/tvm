@@ -168,7 +168,7 @@ def optimize(graph, shape, dtype="float32", layout=None):
         graph = graph_attr.set_dtype_inputs(graph, dtype)
         graph = graph.apply(["InferShape", "InferType", "AlterOpLayout"])
         graph = graph_attr.set_layout_inputs(graph, layout)
-        graph = graph.apply(["CorrectLayout"])
+        graph = graph.apply(["CorrectLayout"]) #correct layout.
 
     if cfg.pass_enabled("SimplifyInference"):
         graph = graph_attr.set_shape_inputs(graph, shape)
